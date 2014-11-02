@@ -1,0 +1,22 @@
+.zygote-splash {
+  width: 280px;
+  margin: 20% auto;
+}
+.zygote-splash img {
+  display: inline-block;
+  float: left;
+  height: 150px;
+  width: 150px;
+  margin: 0 5px 0 0;
+}
+.zygote-splash header {
+  display: inline-block;
+  padding: 30px 0 0 0;
+}
+.zygote-splash header h1 {
+  margin: 0 0 5px 0;
+}
+.zygote-splash header .tagline {
+  font-size: 1em;
+  color: gray;
+}

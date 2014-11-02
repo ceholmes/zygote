@@ -1,0 +1,27 @@
+{
+  "name": "zygote",
+  "version": "0.0.0",
+  "description": "A MEAN stack seed project.",
+  "author": "Chuck Holmes",
+  "license": "ISC",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"    
+  },
+  "dependencies": {
+    "express": "~4.0.0",
+    "static-favicon": "~1.0.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "express3-handlebars": "*"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-nodemon": "^0.3.0",
+    "grunt-concurrent": "^1.0.0"
+  }
+}
