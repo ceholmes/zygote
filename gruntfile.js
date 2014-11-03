@@ -31,9 +31,8 @@ module.exports = function(grunt) {
         nodemon: {
             dev: {
                 script: "<%=pkg.main %>",
-                options: {
-                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "Gruntfile.js"]                    
-                    //ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
+                options: {                    
+                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
                 }
             },
             inspect: {
@@ -81,6 +80,26 @@ module.exports = function(grunt) {
     // register default task
 	grunt.registerTask('default', ['package', 'sass']);
 
+
+    grunt.registerTask("debug", function(inspect, breakOnFirstLine){
+
+        var nodemonTask = "dev";
+        
+        if(inspect === "inspect"){
+
+            // set nodemon task based on breakOnFirstLine grunt argument
+            nodemonTask = breakOnFirstLine === "break" ? "inspectBreak" : "inspect";
+
+            // spawn node-inspector as a child process
+            grunt.util.spawn({
+                cmd: "node-inspector"
+            });
+            
+            console.log("Node inspector running at http://localhost:8080/debug?port=5858");
+        }
+
+        grunt.task.run(["concurrent:"+nodemonTask]);
+    });
 
     // example custom task
     grunt.registerTask('package', function() {
