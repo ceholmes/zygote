@@ -10,11 +10,7 @@ module.exports = function(grunt) {
                 options: {
                     livereload: true
                 }
-            },
-            css: {				
-                files: 'public/css/*.scss',
-				tasks: ['sass']
-			}
+            }            
         },
 
         sass: { 
@@ -27,6 +23,18 @@ module.exports = function(grunt) {
                 }
             }
         },
+
+        compass: {
+            options: {
+                sassDir: 'public/css',
+                cssDir: 'public/css',
+            },
+            watch: {
+                options: {
+                    watch: true
+                }
+            }
+        },   
 
         nodemon: {
             dev: {
@@ -56,8 +64,8 @@ module.exports = function(grunt) {
                 limit: 10,
                 logConcurrentOutput: true                
             },
-            dev: {
-                tasks: ["nodemon:dev", "watch"]
+            dev: {                
+                tasks:["nodemon:dev", "compass:watch", "watch"]
             },
             inspect: {
                 tasks: ["nodemon:inspect", "watch"]
@@ -73,6 +81,7 @@ module.exports = function(grunt) {
     // load npm tasks
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks("grunt-concurrent");
 
@@ -80,26 +89,6 @@ module.exports = function(grunt) {
     // register default task
 	grunt.registerTask('default', ['package', 'sass']);
 
-
-    grunt.registerTask("debug", function(inspect, breakOnFirstLine){
-
-        var nodemonTask = "dev";
-        
-        if(inspect === "inspect"){
-
-            // set nodemon task based on breakOnFirstLine grunt argument
-            nodemonTask = breakOnFirstLine === "break" ? "inspectBreak" : "inspect";
-
-            // spawn node-inspector as a child process
-            grunt.util.spawn({
-                cmd: "node-inspector"
-            });
-            
-            console.log("Node inspector running at http://localhost:8080/debug?port=5858");
-        }
-
-        grunt.task.run(["concurrent:"+nodemonTask]);
-    });
 
     // example custom task
     grunt.registerTask('package', function() {

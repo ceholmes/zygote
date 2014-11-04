@@ -6,7 +6,7 @@
   "license": "ISC",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"    
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "~4.0.0",
@@ -22,6 +22,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-sass": "^0.8.1",
     "grunt-nodemon": "^0.3.0",
-    "grunt-concurrent": "^1.0.0"
+    "grunt-concurrent": "^1.0.0",
+    "grunt-contrib-compass": "^1.0.1"
   }
 }
