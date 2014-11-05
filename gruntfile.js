@@ -90,6 +90,27 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', ['package', 'sass']);
 
 
+
+    grunt.registerTask("debug", function(inspect, breakOnFirstLine){
+
+        var nodemonTask = "dev";
+        
+        if(inspect === "inspect"){
+            
+            nodemonTask = breakOnFirstLine === "break" ? "inspectBreak" : "inspect";
+
+            grunt.util.spawn({
+                cmd: "node-inspector"
+            });
+            
+            console.log("Node inspector running at http://localhost:8080/debug?port=5858");
+        }
+
+        grunt.task.run(["concurrent:"+nodemonTask]);
+    });
+
+
+
     // example custom task
     grunt.registerTask('package', function() {
         var pkg = grunt.file.readJSON('package.json');
