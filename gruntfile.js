@@ -1,9 +1,7 @@
 module.exports = function(grunt) {
 
     grunt.initConfig({        
-
         pkg: grunt.file.readJSON("package.json"),
-
         watch: {
             html: {                
                 files: ['public/index.html', 'public/css/*.css'],
@@ -12,7 +10,6 @@ module.exports = function(grunt) {
                 }
             }            
         },
-
         sass: { 
             dist: {
                 options: {
@@ -23,7 +20,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-
         compass: {
             options: {
                 sassDir: 'public/css',
@@ -35,30 +31,28 @@ module.exports = function(grunt) {
                 }
             }
         },   
-
         nodemon: {
-            dev: {
-                script: "<%=pkg.main %>",
+            dev: {                
+                script: 'server.js',
                 options: {                    
-                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
+                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
                 }
             },
             inspect: {
-                script: "<%=pkg.main %>",
+                script: 'server.js',
                 options: {
                     nodeArgs: ["--debug"],
                     ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
                 }
             },
             inspectBreak: {
-                script: "<%=pkg.main %>",
+                script: 'server.js',
                 options: {
                     nodeArgs: ["--debug-brk"],
                     ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
                 }
             }
         },
-
         concurrent: {
             options: {
                 limit: 10,
@@ -74,7 +68,6 @@ module.exports = function(grunt) {
                 tasks: ["nodemon:inspectBreak", "watch"]
             }          
         }
-
     });
 
 
@@ -89,8 +82,7 @@ module.exports = function(grunt) {
     // register default task
 	grunt.registerTask('default', ['package', 'sass']);
 
-
-
+    // node-inspector task
     grunt.registerTask("debug", function(inspect, breakOnFirstLine){
 
         var nodemonTask = "dev";
@@ -106,18 +98,15 @@ module.exports = function(grunt) {
             console.log("Node inspector running at http://localhost:8080/debug?port=5858");
         }
 
-        grunt.task.run(["concurrent:"+nodemonTask]);
+        grunt.task.run(["concurrent:" + nodemonTask]);
     });
 
-
-
-    // example custom task
+    // package info
     grunt.registerTask('package', function() {
         var pkg = grunt.file.readJSON('package.json');
 
         grunt.log.writeln('');
         grunt.log.writeln(pkg.name + '  ' + pkg.version + '  ' + pkg.description);                        
     });
-
 
 }
