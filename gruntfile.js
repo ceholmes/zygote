@@ -1,22 +1,22 @@
 module.exports = function(grunt) {
 
-    grunt.initConfig({        
+    grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         watch: {
-            html: {                
+            html: {
                 files: ['public/index.html', 'public/css/*.css'],
                 options: {
                     livereload: true
                 }
-            }            
+            }
         },
-        sass: { 
+        sass: {
             dist: {
                 options: {
                     style: 'expanded'
                 },
                 files: {
-                	'public/css/style.css': 'public/css/style.scss'                    
+                    'public/css/style.css': 'public/css/style.scss'
                 }
             }
         },
@@ -30,11 +30,11 @@ module.exports = function(grunt) {
                     watch: true
                 }
             }
-        },   
+        },
         nodemon: {
-            dev: {                
+            dev: {
                 script: 'server.js',
-                options: {                    
+                options: {
                     ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
                 }
             },
@@ -42,31 +42,42 @@ module.exports = function(grunt) {
                 script: 'server.js',
                 options: {
                     nodeArgs: ["--debug"],
-                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
+                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
                 }
             },
             inspectBreak: {
                 script: 'server.js',
                 options: {
                     nodeArgs: ["--debug-brk"],
-                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]                    
+                    ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
                 }
             }
         },
         concurrent: {
             options: {
                 limit: 10,
-                logConcurrentOutput: true                
+                logConcurrentOutput: true
             },
-            dev: {                
-                tasks:["nodemon:dev", "compass:watch", "watch"]
+            dev: {
+                tasks: ["nodemon:dev", "compass:watch", "watch"]
             },
             inspect: {
                 tasks: ["nodemon:inspect", "watch"]
             },
             inspectBreak: {
                 tasks: ["nodemon:inspectBreak", "watch"]
-            }          
+            }
+        },
+        jshint: {
+            files: ['Gruntfile.js', 'app/**/*.js', '*.js'],
+            options: {
+                globals: {
+                    jQuery: true,
+                    console: true,
+                    module: true,
+                    document: true
+                }
+            }
         }
     });
 
@@ -77,24 +88,25 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks("grunt-concurrent");
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
 
     // register default task
-	grunt.registerTask('default', ['package', 'sass']);
+    grunt.registerTask('default', ['package', 'sass']);
 
     // node-inspector task
-    grunt.registerTask("debug", function(inspect, breakOnFirstLine){
+    grunt.registerTask("debug", function(inspect, breakOnFirstLine) {
 
         var nodemonTask = "dev";
-        
-        if(inspect === "inspect"){
-            
+
+        if (inspect === "inspect") {
+
             nodemonTask = breakOnFirstLine === "break" ? "inspectBreak" : "inspect";
 
             grunt.util.spawn({
                 cmd: "node-inspector"
             });
-            
+
             console.log("Node inspector running at http://localhost:8080/debug?port=5858");
         }
 
@@ -103,10 +115,8 @@ module.exports = function(grunt) {
 
     // package info
     grunt.registerTask('package', function() {
-        var pkg = grunt.file.readJSON('package.json');
-
-        grunt.log.writeln('');
-        grunt.log.writeln(pkg.name + '  ' + pkg.version + '  ' + pkg.description);                        
+        var pkg = grunt.file.readJSON('package.json');        
+        grunt.log.writeln(pkg.name + '  ' + pkg.version + '  ' + pkg.description);
     });
 
-}
+};

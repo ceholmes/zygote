@@ -23,6 +23,7 @@
     "grunt-contrib-sass": "^0.8.1",
     "grunt-nodemon": "^0.3.0",
     "grunt-concurrent": "^1.0.0",
-    "grunt-contrib-compass": "^1.0.1"
+    "grunt-contrib-compass": "^1.0.1",
+    "grunt-contrib-jshint": "^0.10.0"
   }
 }
