@@ -1,7 +1,11 @@
+
 module.exports = function(grunt) {
 
+    // config tasks
     grunt.initConfig({
+
         pkg: grunt.file.readJSON("package.json"),
+
         watch: {
             html: {
                 files: ['public/index.html', 'public/css/*.css'],
@@ -10,19 +14,21 @@ module.exports = function(grunt) {
                 }
             }
         },
-        sass: {
-            dist: {
-                options: {
-                    style: 'expanded'
-                },
-                files: {
-                    'public/css/style.css': 'public/css/style.scss'
-                }
+        concat: {
+            build: {
+                src: ["public/js/**/*.js"],
+                dest: "public/js/build/<%=pkg.name %>.js",
+            }
+        },        
+        uglify: {
+            build: {
+                src: "public/js/build/<%=pkg.name %>.js",
+                dest: "public/js/build/<%=pkg.name %>.min.js"
             }
         },
         compass: {
             options: {
-                sassDir: 'public/css',
+                sassDir: 'public/css/sass',
                 cssDir: 'public/css',
             },
             watch: {
@@ -33,23 +39,34 @@ module.exports = function(grunt) {
         },
         nodemon: {
             dev: {
-                script: 'server.js',
+                script: '<%=pkg.main%>',
                 options: {
                     ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
                 }
             },
             inspect: {
-                script: 'server.js',
+                script: '<%=pkg.main%>',
                 options: {
                     nodeArgs: ["--debug"],
                     ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
                 }
             },
             inspectBreak: {
-                script: 'server.js',
+                script: '<%=pkg.main%>',
                 options: {
                     nodeArgs: ["--debug-brk"],
                     ignore: ["node_modules/**", ".git/", ".sass-cache/", "public/", "Gruntfile.js"]
+                }
+            }
+        },
+        jshint: {
+            files: ['Gruntfile.js', 'app/**/*.js', '*.js'],
+            options: {
+                globals: {
+                    jQuery: true,
+                    console: true,
+                    module: true,
+                    document: true
                 }
             }
         },
@@ -67,56 +84,54 @@ module.exports = function(grunt) {
             inspectBreak: {
                 tasks: ["nodemon:inspectBreak", "watch"]
             }
-        },
-        jshint: {
-            files: ['Gruntfile.js', 'app/**/*.js', '*.js'],
-            options: {
-                globals: {
-                    jQuery: true,
-                    console: true,
-                    module: true,
-                    document: true
-                }
-            }
         }
+        
     });
 
 
-    // load npm tasks
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-sass');
+    // load tasks
+    grunt.loadNpmTasks('grunt-contrib-watch');    
     grunt.loadNpmTasks('grunt-contrib-compass');
-    grunt.loadNpmTasks('grunt-nodemon');
-    grunt.loadNpmTasks("grunt-concurrent");
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-concurrent");
+    grunt.loadNpmTasks('grunt-nodemon');
 
 
-    // register default task
-    grunt.registerTask('default', ['package', 'sass']);
+    // register tasks    
+    grunt.registerTask('default', ['help']);
 
-    // node-inspector task
-    grunt.registerTask("debug", function(inspect, breakOnFirstLine) {
+    grunt.registerTask('serve', function(watch) {
 
-        var nodemonTask = "dev";
+        var task = (watch === 'watch') ? 'concurrent:dev' : 'nodemon:dev';
+        grunt.task.run(task);        
+    });    
 
-        if (inspect === "inspect") {
+    grunt.registerTask("debug", function(breakOnFirstLine) {
 
-            nodemonTask = breakOnFirstLine === "break" ? "inspectBreak" : "inspect";
+        var task = breakOnFirstLine === "break" ? "inspectBreak" : "inspect";
 
-            grunt.util.spawn({
-                cmd: "node-inspector"
-            });
+        grunt.util.spawn({
+            cmd: "node-inspector"
+        });
 
-            console.log("Node inspector running at http://localhost:8080/debug?port=5858");
-        }
-
-        grunt.task.run(["concurrent:" + nodemonTask]);
+        console.log("Node inspector running at http://localhost:8080/debug?port=5858");
+    
+        grunt.task.run(["concurrent:" + task]);
     });
 
-    // package info
-    grunt.registerTask('package', function() {
-        var pkg = grunt.file.readJSON('package.json');        
-        grunt.log.writeln(pkg.name + '  ' + pkg.version + '  ' + pkg.description);
+
+    grunt.registerTask('help', function(){
+
+        console.log('');
+        console.log('grunt serve            starts server with nodemon');
+        console.log('grunt serve:watch      starts server and watches for changes');
+        console.log('');
+        console.log('grunt debug            starts node-inspector');
+        console.log('grunt debug:break      starts node-inspector and breaks on first line');
+        console.log('');
+
     });
 
 };
