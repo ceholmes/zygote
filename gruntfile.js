@@ -1,4 +1,3 @@
-
 module.exports = function(grunt) {
 
     // config tasks
@@ -19,7 +18,7 @@ module.exports = function(grunt) {
                 src: ["public/js/**/*.js"],
                 dest: "public/js/build/<%=pkg.name %>.js",
             }
-        },        
+        },
         uglify: {
             build: {
                 src: "public/js/build/<%=pkg.name %>.js",
@@ -85,28 +84,41 @@ module.exports = function(grunt) {
                 tasks: ["nodemon:inspectBreak", "watch"]
             }
         }
-        
+
     });
 
 
     // load tasks
-    grunt.loadNpmTasks('grunt-contrib-watch');    
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-concurrent");
-    grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-nodemon');    
 
 
     // register tasks    
     grunt.registerTask('default', ['help']);
 
+    grunt.registerTask('help', function() {
+
+        console.log('');
+        console.log('grunt serve            starts server with nodemon');
+        console.log('grunt serve:watch      starts server and watches for changes');
+        console.log('');
+        console.log('grunt debug            starts node-inspector');
+        console.log('grunt debug:break      starts node-inspector and breaks on first line');
+        console.log('grunt lint             runs jsHint');
+        console.log('');
+
+    });
+
     grunt.registerTask('serve', function(watch) {
 
         var task = (watch === 'watch') ? 'concurrent:dev' : 'nodemon:dev';
-        grunt.task.run(task);        
-    });    
+        grunt.task.run(task);
+    });
 
     grunt.registerTask("debug", function(breakOnFirstLine) {
 
@@ -117,21 +129,12 @@ module.exports = function(grunt) {
         });
 
         console.log("Node inspector running at http://localhost:8080/debug?port=5858");
-    
+
         grunt.task.run(["concurrent:" + task]);
     });
 
+    grunt.registerTask('lint', ['jshint']);
 
-    grunt.registerTask('help', function(){
 
-        console.log('');
-        console.log('grunt serve            starts server with nodemon');
-        console.log('grunt serve:watch      starts server and watches for changes');
-        console.log('');
-        console.log('grunt debug            starts node-inspector');
-        console.log('grunt debug:break      starts node-inspector and breaks on first line');
-        console.log('');
-
-    });
 
 };

@@ -1,9 +1,8 @@
 {
   "name": "zygote",
   "version": "0.0.0",
-    
   "dependencies": {
-    "bootstrap": "~3.3.0",
-    "angular": "~1.3.0"
+    "angular": "~1.3.0",
+    "bootstrap-sass-official": "~3.3.1"
   }
 }
