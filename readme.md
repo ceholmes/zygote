@@ -1,2 +1,2 @@
 ###Zygote
-Zygote aims to be a minimalistic MEAN stack seed project.
+Zygote is a minimalistic MEAN stack seed project.
